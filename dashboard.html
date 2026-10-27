@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block body %}
+<div class="card mb-4"><div class="card-body">
+<h5>Upload a document</h5>
+<form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data" class="row g-2">
+{% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% endif %}
+<div class="col-md-9"><input class="form-control" type="file" name="file" required></div>
+<div class="col-md-3"><button class="btn btn-primary w-100">Upload</button></div></form>
+<div class="form-text">Allowed: txt, pdf, png, jpg (max 2 MB in hardened mode)</div>
+</div></div>
+<div class="card"><div class="card-body"><h5>My documents</h5>
+<div class="table-responsive"><table class="table align-middle">
+<thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Size</th><th>Uploaded</th><th></th></tr></thead><tbody>
+{% for d in docs %}<tr><td>{{ d.id }}</td><td>{{ d.original_name }}</td><td>{{ d.mime }}</td>
+<td>{{ (d.size / 1024) | round(1) }} KB</td><td>{{ d.uploaded_at }}</td>
+<td class="text-end text-nowrap">
+<a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="{{ url_for('main.preview', doc_id=d.id) }}">Preview</a>
+<a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.download', doc_id=d.id) }}">Download</a>
+<form method="post" action="{{ url_for('main.delete', doc_id=d.id) }}" class="d-inline">
+{% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% endif %}
+<button class="btn btn-sm btn-outline-danger">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="text-muted">No documents yet.</td></tr>{% endfor %}
+</tbody></table></div></div></div>{% endblock %}

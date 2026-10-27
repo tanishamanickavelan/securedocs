@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<div class="row justify-content-center"><div class="col-md-5"><div class="card"><div class="card-body p-4">
+<h4 class="mb-3">{{ title }}</h4>
+<form method="post" action="/{{ action }}">
+{% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% endif %}
+<div class="mb-3"><label class="form-label" for="username">Username</label><input class="form-control" id="username" name="username" required></div>
+<div class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" id="password" type="password" name="password" required></div>
+<button class="btn btn-primary w-100">{{ title }}</button></form>
+<p class="mt-3 mb-0 small">{% if action == 'login' %}No account? <a href="/register">Register</a>{% else %}Have an account? <a href="/login">Log in</a>{% endif %}</p>
+</div></div></div></div>{% endblock %}

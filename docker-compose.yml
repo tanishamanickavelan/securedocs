@@ -1,0 +1,32 @@
+# `docker compose up -d --build`               -> HARDENED only   (http://localhost:5000)
+# `docker compose --profile lab up -d --build` -> adds VULNERABLE (http://localhost:5001)
+# Both ports are bound to 127.0.0.1, so they are NOT reachable from other machines.
+x-common: &common
+  build: .
+  restart: "no"
+  read_only: true
+  tmpfs: ["/tmp"]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+
+services:
+  hardened:
+    <<: *common
+    environment:
+      SECUREDOCS_MODE: hardened
+      SECRET_KEY: ${SECRET_KEY:-}
+    ports: ["127.0.0.1:5000:5000"]
+    volumes: ["hardened_data:/data"]
+
+  vulnerable:
+    <<: *common
+    profiles: ["lab"]
+    environment:
+      SECUREDOCS_MODE: vulnerable
+      LAB_ACK: I_AM_LOCAL_AND_ISOLATED
+    ports: ["127.0.0.1:5001:5000"]
+    volumes: ["vulnerable_data:/data"]
+
+volumes:
+  hardened_data:
+  vulnerable_data:

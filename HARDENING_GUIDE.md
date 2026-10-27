@@ -1,0 +1,2 @@
+# Hardening guide
+Every fix is the `hardened()` branch beside its vulnerable twin. Map: `security.py::validate_upload` (extension allowlist + signatures), `routes.py::upload` (random names, storage outside static), `routes.py::get_doc` (owner check), `__init__.py` (size limit, cookies, CSRF `before_request`, headers `after_request`), `routes.py::preview/download` (allowlisted preview, attachment), `docker-compose.yml` (localhost bind, non-root, read-only, cap_drop).
