@@ -102,6 +102,13 @@ def test_h_download_is_attachment(hard):
     assert r.status_code == 200 and "attachment" in r.headers["Content-Disposition"]
 
 
+def test_h_sri_attribute_present(hard):
+    c = hard.test_client()
+    html = c.get("/login").get_data(as_text=True)
+    assert 'integrity="sha384-' in html
+    assert 'crossorigin="anonymous"' in html
+
+
 # ---------------- VULNERABLE (expected weaknesses) ----------------
 def test_v_refuses_without_ack(tmp_path):
     with pytest.raises(RuntimeError):
